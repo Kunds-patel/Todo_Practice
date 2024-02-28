@@ -3,24 +3,42 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import React, { Component, createRef } from "react";
 // import uuid from "react-uuid";
+
+const per_page = 5;
 export default class Todo extends Component {
   state = {
     todoList: [],
     filterType: "All",
     editMode: 0,
     page: 1,
+    totle_page: 0,
   };
 
   async componentDidMount() {
-    try {
-      const res = await fetch("http://localhost:3000/todoList");
-      const json = await res.json();
-      this.setState({ todoList: json });
-    } catch (error) {}
+    this.loadTodo(1, "All");
   }
 
+  loadTodo = async (currentPage, filterType) => {
+    try {
+      console.log("All");
+      let url = `http://localhost:3000/todoList?_page=${currentPage}&_per_page=${per_page}`;
+      if (filterType !== "All") {
+        url += `&isDone=${filterType === "Completed" ? 1 : 0}`;
+        console.log(url);
+      }
+      const res = await fetch(url);
+      const json = await res.json();
+      this.setState({
+        todoList: json.data,
+        totle_page: json.pages,
+        page: currentPage,
+        filterType,
+      });
+    } catch (error) {}
+  };
   inputRef = createRef();
   editRef = createRef();
+
   addTodo = async (event) => {
     try {
       event.preventDefault();
@@ -48,33 +66,6 @@ export default class Todo extends Component {
     } catch (error) {}
   };
 
-  toggoleTodo = async (event) => {
-    try {
-      const res = await fetch(`http://localhost:3000/todoList/${event.id}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          ...event,
-          isDone: !event.isDone,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-      const json = await res.json();
-      this.setState(({ todoList }) => {
-        const index = todoList.findIndex((x) => x.id === event.id);
-        return {
-          todoList: [
-            ...todoList.slice(0, index),
-            json,
-            ...todoList.slice(index + 1),
-          ],
-        };
-      });
-    } catch (error) {}
-  };
-
   deleteTodo = async (event) => {
     try {
       await fetch(`http://localhost:3000/todoList/${event.id}`, {
@@ -97,10 +88,7 @@ export default class Todo extends Component {
     try {
       const res = await fetch(`http://localhost:3000/todoList/${e.id}`, {
         method: "PUT",
-        body: JSON.stringify({
-          ...e,
-          text: this.editRef.current.value,
-        }),
+        body: JSON.stringify(e),
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -115,13 +103,14 @@ export default class Todo extends Component {
             json,
             ...todoList.slice(index + 1),
           ],
+          editMode: 0,
         };
       });
     } catch (error) {}
   };
 
   render() {
-    const { todoList, filterType, editMode } = this.state;
+    const { todoList, filterType, editMode, page, totle_page } = this.state;
     return (
       <div className="flex flex-col gap-6 min-h-screen">
         <form
@@ -143,74 +132,89 @@ export default class Todo extends Component {
         </form>
         <div className="flex-1">
           {todoList.map((x) => {
-            if (
-              filterType === "All" ||
-              (filterType === "Pending" && x.isDone === false) ||
-              (filterType === "Completed" && x.isDone === true)
-            ) {
-              return (
-                <div key={x.id} className="flex m-6 gap-3 items-center">
-                  <Checkbox
-                    checked={x.isDone}
-                    onCheckedChange={() => this.toggoleTodo(x)}
-                  />
-                  {editMode === x.id ? (
-                    <form
-                      className="flex-1 flex gap-4"
-                      onSubmit={() => this.chanageText(x)}
-                    >
-                      <Input className="flex-1" ref={this.editRef} />
-                      <Button
-                        type="submit"
-                        onClick={() => this.setState({ editMode: x.id })}
-                      >
-                        submit
-                      </Button>
-                    </form>
-                  ) : (
-                    <p
-                      className={`flex-1 ${
-                        x.isDone ? "line-through text-slate-300	" : ""
-                      }`}
-                    >
-                      {x.text}
-                    </p>
-                  )}
-                  <Button
-                    onClick={() =>
-                      this.setState({ editMode: x.id }, () => {
-                        this.editRef.current.value = x.text;
-                      })
-                    }
+            return (
+              <div key={x.id} className="flex m-6 gap-3 items-center">
+                <Checkbox
+                  checked={x.isDone}
+                  onCheckedChange={() => {
+                    this.chanageText({
+                      ...x,
+                      isDone: !x.isDone,
+                    });
+                  }}
+                />
+                {editMode === x.id ? (
+                  <form
+                    className="flex-1 flex gap-4"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      this.chanageText({
+                        ...x,
+                        text: this.editRef.current.value,
+                      });
+                    }}
                   >
-                    Edit
-                  </Button>
-                  <Button onClick={() => this.deleteTodo(x)}>Delete</Button>
-                </div>
-              );
-            }
-            return null;
+                    <Input className="flex-1" ref={this.editRef} />
+                    <Button type="submit">submit</Button>
+                  </form>
+                ) : (
+                  <p
+                    className={`flex-1 ${
+                      x.isDone ? "line-through text-slate-300	" : ""
+                    }`}
+                  >
+                    {x.text}
+                  </p>
+                )}
+                <Button
+                  onClick={() =>
+                    this.setState({ editMode: x.id }, () => {
+                      this.editRef.current.value = x.text;
+                    })
+                  }
+                >
+                  Edit
+                </Button>
+                <Button onClick={() => this.deleteTodo(x)}>Delete</Button>
+              </div>
+            );
           })}
+          <div className="flex gap-96 mx-80 flex-row-reverse">
+            <Button
+              className="flex-1"
+              onClick={() => this.loadTodo(page + 1, filterType)}
+              disabled={page >= totle_page}
+            >
+              Next
+            </Button>
+            <Button
+              className="flex-1"
+              onClick={() => this.loadTodo(page - 1, filterType)}
+              disabled={page <= 1}
+            >
+              Previous
+            </Button>
+          </div>
         </div>
         <div className="flex gap-1">
           <Button
             className="flex-1 rounded-none"
             variant={filterType === "All" ? "destructive" : "default"}
-            onClick={() => this.change("All")}
+            onClick={() => this.loadTodo(page, "All")}
           >
             All
           </Button>
           <Button
             variant={filterType === "Pending" ? "destructive" : "default"}
             className="flex-1 rounded-none"
-            onClick={() => this.change("Pending")}
+            onClick={() => this.loadTodo(1, "Pending")}
           >
             Pending
           </Button>
           <Button
             variant={filterType === "Completed" ? "destructive" : "default"}
             className="flex-1 rounded-none"
-            onClick={() => this.change("Completed")}
+            onClick={() => this.loadTodo(1, "Completed")}
           >
             Completed
           </Button>
