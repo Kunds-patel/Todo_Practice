@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import React, { Component, createRef } from "react";
+import FormData from "./formData";
+import Footer from "./footer";
+import Loading from "./loading";
 // import uuid from "react-uuid";
 
 const per_page = 5;
@@ -113,112 +116,19 @@ export default class Todo extends Component {
     const { todoList, filterType, editMode, page, totle_page } = this.state;
     return (
       <div className="flex flex-col gap-6 min-h-screen">
-        <form
-          onSubmit={this.addTodo}
-          className="flex flex-col gap-4 max-w-sm mx-auto"
-        >
-          <h1 className="text-center text-3xl font-bold mt-6">My Todo Lists</h1>
-          <div className="flex">
-            <Input
-              placeholder="Enter Data"
-              ref={this.inputRef}
-              className="rounded-e-none"
-              required
-            />
-            <Button type="submit" className="rounded-s-none">
-              Submit
-            </Button>
-          </div>
-        </form>
-        <div className="flex-1">
-          {todoList.map((x) => {
-            return (
-              <div key={x.id} className="flex m-6 gap-3 items-center">
-                <Checkbox
-                  checked={x.isDone}
-                  onCheckedChange={() => {
-                    this.chanageText({
-                      ...x,
-                      isDone: !x.isDone,
-                    });
-                  }}
-                />
-                {editMode === x.id ? (
-                  <form
-                    className="flex-1 flex gap-4"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      this.chanageText({
-                        ...x,
-                        text: this.editRef.current.value,
-                      });
-                    }}
-                  >
-                    <Input className="flex-1" ref={this.editRef} />
-                    <Button type="submit">submit</Button>
-                  </form>
-                ) : (
-                  <p
-                    className={`flex-1 ${
-                      x.isDone ? "line-through text-slate-300	" : ""
-                    }`}
-                  >
-                    {x.text}
-                  </p>
-                )}
-                <Button
-                  onClick={() =>
-                    this.setState({ editMode: x.id }, () => {
-                      this.editRef.current.value = x.text;
-                    })
-                  }
-                >
-                  Edit
-                </Button>
-                <Button onClick={() => this.deleteTodo(x)}>Delete</Button>
-              </div>
-            );
-          })}
-          <div className="flex gap-96 mx-80 flex-row-reverse">
-            <Button
-              className="flex-1"
-              onClick={() => this.loadTodo(page + 1, filterType)}
-              disabled={page >= totle_page}
-            >
-              Next
-            </Button>
-            <Button
-              className="flex-1"
-              onClick={() => this.loadTodo(page - 1, filterType)}
-              disabled={page <= 1}
-            >
-              Previous
-            </Button>
-          </div>
-        </div>
-        <div className="flex gap-1">
-          <Button
-            className="flex-1 rounded-none"
-            variant={filterType === "All" ? "destructive" : "default"}
-            onClick={() => this.loadTodo(page, "All")}
-          >
-            All
-          </Button>
-          <Button
-            variant={filterType === "Pending" ? "destructive" : "default"}
-            className="flex-1 rounded-none"
-            onClick={() => this.loadTodo(1, "Pending")}
-          >
-            Pending
-          </Button>
-          <Button
-            variant={filterType === "Completed" ? "destructive" : "default"}
-            className="flex-1 rounded-none"
-            onClick={() => this.loadTodo(1, "Completed")}
-          >
-            Completed
-          </Button>
-        </div>
+        <FormData addTodo={this.addTodo} ref={this.inputRef} />
+        <Loading
+          todoList={todoList}
+          chanageText={this.chanageText}
+          editMode={editMode}
+          ref={this.editRef}
+          deleteTodo={this.deleteTodo}
+          loadTodo={this.loadTodo}
+          page={page}
+          filterType={filterType}
+          totle_page={totle_page}
+        />
+        <Footer loadTodo={this.loadTodo} filterType={filterType} page={page} />
       </div>
     );
   }
