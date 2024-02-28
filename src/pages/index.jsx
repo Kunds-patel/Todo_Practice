@@ -1,14 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import React, { Component, createRef } from "react";
+import React, { PureComponent, createRef } from "react";
 import FormData from "./formData";
 import Footer from "./footer";
 import Loading from "./loading";
-// import uuid from "react-uuid";
 
 const per_page = 5;
-export default class Todo extends Component {
+export default class Todo extends PureComponent {
   state = {
     todoList: [],
     filterType: "All",

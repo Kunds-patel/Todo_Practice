@@ -2,6 +2,7 @@ import React, { forwardRef, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import PreNext from "./pre_next";
 
 function Loading(
   {
@@ -66,22 +67,12 @@ function Loading(
           </div>
         );
       })}
-      <div className="flex gap-96 mx-80 flex-row-reverse">
-        <Button
-          className="flex-1"
-          onClick={() => loadTodo(page + 1, filterType)}
-          disabled={page >= totle_page}
-        >
-          Next
-        </Button>
-        <Button
-          className="flex-1"
-          onClick={() => loadTodo(page - 1, filterType)}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-      </div>
+      <PreNext
+        loadTodo={loadTodo}
+        page={page}
+        filterType={filterType}
+        totle_page={totle_page}
+      />
     </div>
   );
 }
