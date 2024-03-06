@@ -36,19 +36,32 @@ export default class TicTacToe extends Component {
   render() {
     const { ticTac, currentPlayer, winner, player } = this.state;
     return (
-      <div className="h-screen grid gap-2 place-content-center text-xl">
-        <h1 className="text-5xl bold mb-14">Tic Tac Toe</h1>
+      <div className=" h-screen grid gap-2 place-content-center text-xl">
+        <h1 className="text-5xl bold mb-7 text-center">Tic Tac Toe</h1>
         {currentPlayer ? (
           <>
+            <Button
+              type="button"
+              onClick={() => {
+                this.setState({
+                  player: 1,
+                  currentPlayer: null,
+                  ticTac: ["", "", "", "", "", "", "", "", ""],
+                  winner: null,
+                });
+              }}
+            >
+              Restart
+            </Button>
             <p className="text-center ">
               Player's {player} : {currentPlayer} turn
             </p>
-            <div className="grid grid-cols-3 grid-rows-3 h-[500px] aspect-square place-content-center gap-2 ">
+            <div className="grid grid-cols-3 bg-black grid-rows-3 h-96 aspect-square place-content-center gap-2 ">
               {ticTac.map((x, i) => (
                 <button
                   key={i}
                   type="button"
-                  className="text-white border-red-600 bg-black h-full text-7xl"
+                  className="text-black bg-white border-red-600 h-full text-7xl"
                   disabled={winner || x}
                   onClick={() => {
                     this.setState(
@@ -83,7 +96,7 @@ export default class TicTacToe extends Component {
           </>
         ) : (
           <>
-            <p>Tose for Player 1 : 'X' or 'O'</p>
+            <p>Toss for Player 1 : 'X' or 'O'</p>
             <Button
               type="button"
               onClick={() => {
@@ -93,7 +106,7 @@ export default class TicTacToe extends Component {
                 }));
               }}
             >
-              Tose
+              Toss
             </Button>
           </>
         )}
