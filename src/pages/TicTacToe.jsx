@@ -26,7 +26,7 @@ export default class TicTacToe extends Component {
     for (const combination of winCombination) {
       const [a, b, c] = combination;
       if (e[a] !== "" && e[a] === e[b] && e[b] === e[c]) {
-        this.setState({ winner: `Congratulations Player ${e[a]} is Winner ` });
+        this.setState({ winner: `Congratulations Player ${e[a]} is Winner` });
       } else if (e.every((value) => value !== "")) {
         this.setState({ winner: "Match is Draw" });
       }
