@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#bus_no:nth-child(3n + 1) {
+  @apply col-span-2;
+}

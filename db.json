@@ -2,17 +2,12 @@
   "todoList": [
     {
       "id": "a239",
-      "text": "Meet",
+      "text": "Kundan",
       "isDone": true
     },
     {
       "id": "b1a4",
       "text": "kunjbihari",
-      "isDone": false
-    },
-    {
-      "id": "9c9d",
-      "text": "Kundan",
       "isDone": false
     },
     {
@@ -26,18 +21,18 @@
       "isDone": true
     },
     {
-      "id": "13cb",
-      "text": "asdfgh",
-      "isDone": true
-    },
-    {
       "id": "4116",
       "text": "asdfghjk",
       "isDone": true
     },
     {
-      "id": "8897",
+      "id": "7e4a",
       "text": "Yagnesh Modh",
+      "isDone": false
+    },
+    {
+      "id": "adf4",
+      "text": "asdfghjkl",
       "isDone": false
     }
   ]
