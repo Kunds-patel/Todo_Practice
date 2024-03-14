@@ -1,35 +1,19 @@
-import React, { memo } from "react";
-import PropTypes from "prop-types";
+import React, { memo, useContext } from "react";
 import TodoItem from "./todoItem";
+import TodoContext from "../../context/TodoContext";
 
-const TodoList = ({ data, onChangeText, onDeleteTodo }) => {
-  console.log("Todolist", data);
+const TodoList = () => {
+  console.log("Todolist");
+
+  const { todoList } = useContext(TodoContext);
+
   return (
     <div className="flex-1">
-      {data.map((x) => {
-        return (
-          <TodoItem
-            key={x.id}
-            item={x}
-            onChangeText={onChangeText}
-            onDeleteTodo={onDeleteTodo}
-          />
-        );
+      {todoList.map((x) => {
+        return <TodoItem key={x.id} item={x} />;
       })}
     </div>
   );
-};
-
-TodoList.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      isDone: PropTypes.bool.isRequired,
-    })
-  ).isRequired,
-  onChangeText: PropTypes.func.isRequired,
-  onDeleteTodo: PropTypes.func.isRequired,
 };
 
 export default memo(TodoList);

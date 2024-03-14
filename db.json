@@ -3,7 +3,7 @@
     {
       "id": "a239",
       "text": "Kundan",
-      "isDone": true
+      "isDone": false
     },
     {
       "id": "b1a4",
@@ -13,16 +13,11 @@
     {
       "id": "4517",
       "text": "Ronak Patel",
-      "isDone": true
+      "isDone": false
     },
     {
       "id": "a004",
       "text": "asdfvgh",
-      "isDone": true
-    },
-    {
-      "id": "4116",
-      "text": "asdfghjk",
       "isDone": true
     },
     {
@@ -33,7 +28,7 @@
     {
       "id": "adf4",
       "text": "asdfghjkl",
-      "isDone": false
+      "isDone": true
     }
   ]
 }

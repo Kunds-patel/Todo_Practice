@@ -12,6 +12,12 @@ export default class All extends Component {
           Todo
         </Link>
         <Link
+          href="/TodoApp_Function"
+          className="grid place-content-center h-36 aspect-square rounded-lg bg-orange-300"
+        >
+          Todo Function
+        </Link>
+        <Link
           href="/TicTacToe"
           className="grid place-content-center h-36 aspect-square rounded-lg bg-orange-300"
         >

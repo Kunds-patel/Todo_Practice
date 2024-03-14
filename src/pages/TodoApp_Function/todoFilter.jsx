@@ -1,23 +1,18 @@
-import React, { memo, useCallback } from "react";
-import PropTypes from "prop-types";
+import React, { memo, useContext } from "react";
 import { Button } from "@/components/ui/button";
+import TodoContext from "../../context/TodoContext";
 
-const TodoFilter = ({ loadTodo, filterType }) => {
+const TodoFilter = () => {
   console.log("TodoFilter");
+  const { filterType, loadTodo } = useContext(TodoContext);
 
-  const onFilter = useCallback(
-    (e) => {
-      loadTodo(e.target.getAttribute("data-type"));
-    },
-    [loadTodo]
-  );
   return (
     <div className="flex gap-1">
       <Button
         className="flex-1 rounded-none"
         data-type="All"
         variant={filterType === "All" ? "destructive" : "default"}
-        onClick={onFilter}
+        onClick={() => loadTodo("All")}
       >
         All
       </Button>
@@ -25,7 +20,7 @@ const TodoFilter = ({ loadTodo, filterType }) => {
         className="flex-1 rounded-none"
         data-type="Pending"
         variant={filterType === "Pending" ? "destructive" : "default"}
-        onClick={onFilter}
+        onClick={() => loadTodo("Pending")}
       >
         Pending
       </Button>
@@ -33,17 +28,12 @@ const TodoFilter = ({ loadTodo, filterType }) => {
         className="flex-1 rounded-none"
         data-type="Completed"
         variant={filterType === "Completed" ? "destructive" : "default"}
-        onClick={onFilter}
+        onClick={() => loadTodo("Completed")}
       >
         Completed
       </Button>
     </div>
   );
-};
-
-TodoFilter.propTypes = {
-  loadTodo: PropTypes.func.isRequired,
-  filterType: PropTypes.oneOf(["All", "Pending", "Completed"]).isRequired,
 };
 
 export default memo(TodoFilter);
