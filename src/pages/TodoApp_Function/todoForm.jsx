@@ -5,7 +5,7 @@ import TodoContext from "../../context/TodoContext";
 
 function TodoForm() {
   const { addTodo, inputRef } = useContext(TodoContext);
-
+  console.log("TodoForm add Todo");
   return (
     <form onSubmit={addTodo} className="flex flex-col gap-4 max-w-sm mx-auto">
       <h1 className="text-center text-3xl font-bold mt-6">My Todo Lists</h1>

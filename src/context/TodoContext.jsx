@@ -70,16 +70,13 @@ const todoReducer = (state, { type, payload }) => {
 };
 
 export function TodoProvider({ children }) {
-  const [{ todoList, filterType, loading, error }, dispatch] = useReducer(
-    todoReducer,
-    initialState
-  );
+  const [todoState, dispatch] = useReducer(todoReducer, initialState);
 
   const inputRef = useRef();
 
   const loadTodo = useCallback(async (ft = "All") => {
     try {
-      dispatch({ typr: "LOAD_TODO_REQEST" });
+      dispatch({ type: "LOAD_TODO_REQEST" });
       let url = `http://localhost:3000/todoList`;
       if (ft !== "All") {
         url += `?isDone=${ft === "Completed" ? 1 : 0}`;
@@ -87,17 +84,17 @@ export function TodoProvider({ children }) {
       const res = await fetch(url);
       const json = await res.json();
       dispatch({
-        typr: "LOAD_TODO_SUCCSESS",
+        type: "LOAD_TODO_SUCCSESS",
         payload: { todoList: json, filterType: ft },
       });
     } catch (error) {
-      dispatch({ typr: "LOAD_TODO_FAIL", payload: error });
+      dispatch({ type: "LOAD_TODO_FAIL", payload: error });
     }
   }, []);
 
   const addTodo = useCallback(async (event) => {
     try {
-      dispatch({ typr: "ADD_TODO_REQEST" });
+      dispatch({ type: "ADD_TODO_REQEST" });
       event.preventDefault();
       const data = inputRef.current;
       const input = data.value;
@@ -114,18 +111,18 @@ export function TodoProvider({ children }) {
       });
       const json = await res.json();
       dispatch({
-        typr: "ADD_TODO_SUCCSESS",
+        type: "ADD_TODO_SUCCSESS",
         payload: json,
       });
       data.value = "";
     } catch (error) {
-      dispatch({ typr: "ADD_TODO_FAIL", payload: error });
+      dispatch({ type: "ADD_TODO_FAIL", payload: error });
     }
   }, []);
 
   const chanageText = useCallback(async (item) => {
     try {
-      dispatch({ typr: "UPDATE_TODO_REQEST" });
+      dispatch({ type: "UPDATE_TODO_REQEST" });
       const res = await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: "PUT",
         body: JSON.stringify({
@@ -139,26 +136,26 @@ export function TodoProvider({ children }) {
       });
       const json = await res.json();
       dispatch({
-        typr: "UPDATE_TODO_SUCCSESS",
+        type: "UPDATE_TODO_SUCCSESS",
         payload: json,
       });
     } catch (error) {
-      dispatch({ typr: "UPDATE_TODO_FAIL", payload: error });
+      dispatch({ type: "UPDATE_TODO_FAIL", payload: error });
     }
   }, []);
 
   const deleteTodo = useCallback(async (item) => {
     try {
-      dispatch({ typr: "DELETE_TODO_REQEST" });
+      dispatch({ type: "DELETE_TODO_REQEST" });
       await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: "DELETE",
       });
       dispatch({
-        typr: "DELETE_TODO_SUCCSESS",
+        type: "DELETE_TODO_SUCCSESS",
         payload: item,
       });
     } catch (error) {
-      dispatch({ typr: "DELETE_TODO_FAIL", payload: error });
+      dispatch({ type: "DELETE_TODO_FAIL", payload: error });
     }
   }, []);
 
@@ -168,15 +165,14 @@ export function TodoProvider({ children }) {
 
   const value = useMemo(
     () => ({
-      todoList,
-      filterType,
+      ...todoState,
       loadTodo,
       addTodo,
       chanageText,
       deleteTodo,
       inputRef,
     }),
-    [todoList, filterType, loadTodo, addTodo, chanageText, deleteTodo, inputRef]
+    [todoState, loadTodo, addTodo, chanageText, deleteTodo, inputRef]
   );
 
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
