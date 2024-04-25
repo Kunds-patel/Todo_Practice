@@ -34,6 +34,23 @@
       "id": "e034",
       "text": "asdfg",
       "isDone": false
+    },
+    {
+      "id": "6e0d",
+      "text": "hey",
+      "isDone": false
+    },
+    {
+      "id": "a3b0",
+      "text": "hi",
+      "isDone": false
+    },
+    {
+      "id": "d288",
+      "text": "Hi",
+      "isDone": false
     }
-  ]
+  ],
+  "register": [],
+  "login": []
 }

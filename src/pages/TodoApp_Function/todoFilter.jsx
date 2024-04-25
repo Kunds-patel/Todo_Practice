@@ -1,10 +1,9 @@
-import React, { memo, useContext } from "react";
+import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
-import TodoContext from "../../context/TodoContext";
+import { useTodo } from "../../context/TodoContext";
 
 const TodoFilter = () => {
-  console.log("TodoFilter");
-  const { filterType, loadTodo } = useContext(TodoContext);
+  const { filterType, loadTodo } = useTodo();
 
   return (
     <div className="flex gap-1">

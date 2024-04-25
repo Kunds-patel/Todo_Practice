@@ -1,11 +1,9 @@
-import React, { memo, useContext } from "react";
+import React, { memo } from "react";
 import TodoItem from "./todoItem";
-import TodoContext from "../../context/TodoContext";
+import { useTodo } from "../../context/TodoContext";
 
 const TodoList = () => {
-  console.log("Todolist");
-
-  const { todoList } = useContext(TodoContext);
+  const { todoList } = useTodo();
 
   return (
     <div className="flex-1">
